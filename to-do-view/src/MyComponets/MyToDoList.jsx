@@ -1,93 +1,65 @@
-import React, { useState } from "react";
+import React from "react";
 import AddTodo from "./AddTodo";
+import Header from "./Header";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 
 const MyToDoList = () => {
-  const [allTodos, setTodos] = useState([]);
-  const [newTitle, setNewTitle] = useState("");
-  const [newDescription, setnewDescription] = useState("");
-  const [newDate, setNewDate] = useState("");
-  const [newTime, setNewTime] = useState("");
-
-  const handleAddTodo = () => {
-    let newTodo = {
-      title: newTitle,
-      description: newDescription,
-      date: newDate,
-      time: newTime,
-    };
-    setTodos((prevTodos) => [...prevTodos, newTodo]); 
-    reset();
-  };
-
-  const reset = (e) => {
-    e.preventDefault();
-    setEmployee({
-      title: "",
-      description: "",
-      date: "",
-      time: "",
-    });
-  };
-
   return (
-    <div className="mt-3 mb-3">
-      <div className="text-center">
-        <AddTodo
-          newTitle={newTitle}
-          setNewTitle={setNewTitle}
-          newDescription={newDescription}
-          setNewDescription={setnewDescription}
-          newDate={newDate}
-          setNewDate={setNewDate}
-          newTime={newTime}
-          setNewTime={setNewTime}
-          handleAddTodo={handleAddTodo}
-          reset={reset}
-        />
+    <>
+      <div className="d-flex justify-content-between">
+        <Header />
+        <AddTodo />
       </div>
-
-      <div id="to-do-list">
-        {allTodos.map((item, index) => {
-          return (
-            <table
-              class="table w-50 table-success table-striped-columns position-absolute top-25 start-25 mt-20 translate-start"
-              key={index}
-            >
-              <thead>
-                <tr>
-                  <th scope="col">Title</th>
-                  <th scope="col">Description</th>
-                  <th scope="col">Date</th>
-                  <th scope="col">Time</th>
-                  <th scope="col">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="row">{item.title}</th>
-                  <td>{item.description}</td>
-                  <td>{item.date}</td>
-                  <td>{item.time}</td>
-                  <td>
-                    <button type="button" class="btn btn-secondary me-2 btn-sm">
-                      <span class="material-symbols-outlined">edit</span>
-                    </button>
-                    <button type="button" class="btn btn-danger me-2 btn-sm">
-                      <span class="material-symbols-outlined">delete</span>
-                    </button>
-                    <button type="button" class="btn btn-success btn-sm">
-                      <span class="material-symbols-outlined">
-                        check_circle
-                      </span>
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          );
-        })}
+      <div className="table-responsive">
+        <table class="table table-striped ">
+          <thead>
+            <tr>
+              <th scope="col">Sr.No</th>
+              <th scope="col">Title</th>
+              <th scope="col">Description</th>
+              <th scope="col">Date</th>
+              <th scope="col">Time</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>gym</td>
+              <td>I have to do leg workout todat</td>
+              <td>02-04-2025</td>
+              <td>7.00 PM</td>
+              <td>
+                <button type="button" className="btn btn-outline-warning me-2">
+                  <FontAwesomeIcon
+                    icon={faTrashCan}
+                    style={{ color: "#fa0000" }}
+                  />
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary me-2"
+                >
+                  <FontAwesomeIcon
+                    icon={faPenToSquare}
+                    style={{ color: "#00ddfa" }}
+                  />
+                </button>
+                <button type="button" className="btn btn-outline-success">
+                  <FontAwesomeIcon
+                    icon={faCircleCheck}
+                    style={{ color: "#07f223" }}
+                  />
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-    </div>
+    </>
   );
 };
 

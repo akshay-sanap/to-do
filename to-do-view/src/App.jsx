@@ -8,24 +8,22 @@ import "./App.css";
 import MyToDoList from "./MyComponets/MyToDoList";
 import Navbar from "./MyComponets/Navbar";
 import Header from "./MyComponets/Header";
-import AddTodo from "./MyComponets/AddTodo";
 
 function App() {
   return (
     <>
       <Navbar />
-      <div className="container   mt-5">
+      <div className="container col-12">
         <BrowserRouter>
           <Routes>
             <Route
               path="/"
               element={
                 <>
-                  <Header /> <MyToDoList />
+                  <MyToDoList />
                 </>
               }
             />
-            <Route path="/" element={<></>} />
           </Routes>
         </BrowserRouter>
       </div>
