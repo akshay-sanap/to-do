@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const AddTodo = () => {
+const AddTodo = ({ addTask }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
@@ -10,6 +10,17 @@ const AddTodo = () => {
     setTitle(""), setDescription(""), setDate(""), setTime("");
   };
 
+  const save = () => {
+    if (!title.trim()) return alert(`Please enter required * feild`);
+    const newTask = {
+      title,
+      description,
+      date,
+      time,
+    };
+    addTask(newTask);
+    reset();
+  };
   return (
     <div className="">
       <>
@@ -43,6 +54,7 @@ const AddTodo = () => {
                   className="btn-close"
                   data-bs-dismiss="modal"
                   aria-label="Close"
+                  onClick={reset}
                 ></button>
               </div>
               <div className="modal-body">
@@ -52,10 +64,13 @@ const AddTodo = () => {
                     class="form-control"
                     id="floatingInput"
                     placeholder="Title for the task"
+                    required
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                   />
-                  <label for="floatingInput">Title</label>
+                  <label for="floatingInput">
+                    Title <span className="text-danger">*</span>
+                  </label>
                 </div>
                 <div class="form-floating">
                   <textarea
@@ -95,6 +110,7 @@ const AddTodo = () => {
                   type="button"
                   className="btn btn-danger"
                   data-bs-dismiss="modal"
+                  onClick={reset}
                 >
                   Close
                 </button>
@@ -105,7 +121,12 @@ const AddTodo = () => {
                 >
                   Clear
                 </button>
-                <button type="button" className="btn btn-success">
+                <button
+                  type="button"
+                  className="btn btn-success"
+                  data-bs-dismiss="modal"
+                  onClick={save}
+                >
                   Save
                 </button>
               </div>
