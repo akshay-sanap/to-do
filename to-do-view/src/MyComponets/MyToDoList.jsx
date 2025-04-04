@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AddTodo from "./AddTodo";
 import Header from "./Header";
+import Pagination from "./Pagination";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPenToSquare,
@@ -11,12 +12,22 @@ import {
 const MyToDoList = () => {
   const [task, setTask] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
   const [editTask, setEditTask] = useState({
     title: "",
     description: "",
     date: "",
     time: "",
   });
+
+  // Pagination Logic
+  const itemsPerPage = 10;
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentTasks = task.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages = Math.ceil(task.length / itemsPerPage);
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const editClick = (index) => {
     setEditIndex(index);
@@ -36,12 +47,40 @@ const MyToDoList = () => {
   };
 
   const addToDo = (newTask) => {
-    setTask((prevTasks) => [...prevTasks, newTask]);
+    setTask((prevTasks) => [...prevTasks, { ...newTask, completed: false }]);
   };
 
   const deleteTask = (index) => {
     setTask((prevTasks) => prevTasks.filter((_, i) => i !== index));
   };
+
+  const toggleComplete = (index) => {
+    setTask((prevTasks) =>
+      prevTasks.map((task, i) =>
+        i === index ? { ...task, completed: !task.completed } : task
+      )
+    );
+  };
+
+  // fetching data from API
+  const fetchData = async () => {
+    const response = await fetch("https://jsonplaceholder.typicode.com/todos");
+    const data = await response.json();
+
+    const formattedTasks = data.map((item) => ({
+      title: item.title,
+      description: "no description",
+      date: "no date",
+      time: "no time",
+      completed: item.completed,
+    }));
+    setTask(formattedTasks);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <>
       <div className="d-flex justify-content-between">
@@ -58,12 +97,13 @@ const MyToDoList = () => {
               <th scope="col">Date</th>
               <th scope="col">Time</th>
               <th scope="col">Actions</th>
+              <th scope="col">Status</th>
             </tr>
           </thead>
           <tbody>
-            {task.length === 0 ? (
+            {currentTasks.length === 0 ? (
               <tr>
-                <td colSpan={6} className="text-center ">
+                <td colSpan={7} className="text-center ">
                   No tasks available!!!
                   <button
                     type="button"
@@ -76,9 +116,9 @@ const MyToDoList = () => {
                 </td>
               </tr>
             ) : (
-              task.map((task, index) => (
+              currentTasks.map((task, index) => (
                 <tr key={index}>
-                  <th scope="row">{index + 1}</th>
+                  <th scope="row">{indexOfFirstItem + index + 1}</th>
                   <td>{task.title}</td>
                   <td>{task.description}</td>
                   <td>{task.date}</td>
@@ -146,6 +186,9 @@ const MyToDoList = () => {
                       data-bs-toggle="modal"
                       data-bs-target="#editmodel"
                       onClick={() => editClick(index)}
+                      style={{
+                        display: task.completed ? "none" : "inline-block",
+                      }}
                     >
                       <FontAwesomeIcon
                         icon={faPenToSquare}
@@ -249,18 +292,42 @@ const MyToDoList = () => {
                         </div>
                       </div>
                     </div>
-                    <button type="button" className="btn btn-outline-success">
+                    <button
+                      type="button"
+                      className="btn btn-outline-success"
+                      onClick={() => toggleComplete(index)}
+                      disabled={task.completed}
+                      style={{
+                        display: task.completed ? "none" : "inline-block",
+                      }}
+                    >
                       <FontAwesomeIcon
                         icon={faCircleCheck}
                         style={{ color: "#07f223" }}
                       />
                     </button>
                   </td>
+                  <td>
+                    {task.completed ? (
+                      <span className="text-bg-success p-1 btn-group-vertical ">
+                        Success
+                      </span>
+                    ) : (
+                      <span className="text-bg-warning p-1 btn-group-vertical">
+                        Pending
+                      </span>
+                    )}
+                  </td>
                 </tr>
               ))
             )}
           </tbody>
         </table>
+        <Pagination
+          totalPages={totalPages}
+          currentPage={currentPage}
+          paginate={paginate}
+        />
       </div>
     </>
   );
