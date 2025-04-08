@@ -1,33 +1,20 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  BrowserRouter,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
-import MyToDoList from "./MyComponets/MyToDoList";
 import Navbar from "./MyComponets/Navbar";
-import Header from "./MyComponets/Header";
+import SignUp from "./MyComponets/Account/SignUp";
+import LogIn from "./MyComponets/Account/LogIn"; // Make sure this is correctly imported
 
 function App() {
   return (
-    <>
+    <BrowserRouter>
       <Navbar />
       <div className="container col-12">
-        <BrowserRouter>
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <>
-                  <MyToDoList />
-                </>
-              }
-            />
-          </Routes>
-        </BrowserRouter>
+        <Routes>
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/login" element={<LogIn />} />
+        </Routes>
       </div>
-    </>
+    </BrowserRouter>
   );
 }
 

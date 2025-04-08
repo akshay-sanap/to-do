@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import AddTodo from "./AddTodo";
 import Header from "./Header";
 import Pagination from "./Pagination";
+import EditModel from "./EditModel";
+import DeleteModal from "./DeleteModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPenToSquare,
@@ -116,210 +118,86 @@ const MyToDoList = () => {
                 </td>
               </tr>
             ) : (
-              currentTasks.map((task, index) => (
-                <tr key={index}>
-                  <th scope="row">{indexOfFirstItem + index + 1}</th>
-                  <td>{task.title}</td>
-                  <td>{task.description}</td>
-                  <td>{task.date}</td>
-                  <td>{task.time}</td>
-                  <td>
-                    <button
-                      type="button"
-                      class="btn btn-outline-warning me-2"
-                      data-bs-toggle="modal"
-                      data-bs-target={`#deleteModal-${index}`}
-                    >
-                      <FontAwesomeIcon
-                        icon={faTrashCan}
-                        style={{ color: "#fa0000" }}
+              currentTasks.map((task, index) => {
+                const actualIndex = indexOfFirstItem + index;
+
+                return (
+                  <tr key={actualIndex}>
+                    <th scope="row">{indexOfFirstItem + index + 1}</th>
+                    <td>{task.title}</td>
+                    <td>{task.description}</td>
+                    <td>{task.date}</td>
+                    <td>{task.time}</td>
+                    <td className="d-flex">
+                      <button
+                        type="button"
+                        class="btn btn-outline-warning me-2"
+                        data-bs-toggle="modal"
+                        data-bs-target={`#deleteModal-${actualIndex}`}
+                      >
+                        <FontAwesomeIcon
+                          icon={faTrashCan}
+                          style={{ color: "#fa0000" }}
+                        />
+                      </button>
+                      <DeleteModal
+                        key={`delete-${index}`}
+                        index={actualIndex}
+                        deleteTask={deleteTask}
                       />
-                    </button>
 
-                    <div
-                      class="modal fade"
-                      id={`deleteModal-${index}`}
-                      tabindex="-1"
-                      aria-labelledby="exampleModalLabel"
-                      aria-hidden="true"
-                    >
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">
-                              Delete Task??
-                            </h1>
-                            <button
-                              type="button"
-                              class="btn-close"
-                              data-bs-dismiss="modal"
-                              aria-label="Close"
-                            ></button>
-                          </div>
-                          <div class="modal-body">
-                            Are You Sure? You wont be able to retrive it!!
-                          </div>
-                          <div class="modal-footer">
-                            <button
-                              type="button"
-                              class="btn btn-secondary"
-                              data-bs-dismiss="modal"
-                            >
-                              Cancel
-                            </button>
-                            <button
-                              type="button"
-                              class="btn btn-outline-danger"
-                              data-bs-dismiss="modal"
-                              onClick={() => deleteTask(index)}
-                            >
-                              Delete
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <button
-                      type="button"
-                      class="btn btn-outline-secondary me-2"
-                      data-bs-toggle="modal"
-                      data-bs-target="#editmodel"
-                      onClick={() => editClick(index)}
-                      style={{
-                        display: task.completed ? "none" : "inline-block",
-                      }}
-                    >
-                      <FontAwesomeIcon
-                        icon={faPenToSquare}
-                        style={{ color: "#00ddfa" }}
+                      <button
+                        type="button"
+                        class="btn btn-outline-warning me-2"
+                        data-bs-toggle="modal"
+                        data-bs-target={`#EditModel-${actualIndex}`}
+                        onClick={() => editClick(actualIndex)}
+                        style={{
+                          display: task.completed ? "none" : "inline-block",
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon={faPenToSquare}
+                          style={{ color: "#00ddfa" }}
+                        />
+                      </button>
+                      <EditModel
+                        key={`edit-${index}`}
+                        index={actualIndex}
+                        editTask={editTask}
+                        editChange={editChange}
+                        saveEdit={saveEdit}
                       />
-                    </button>
 
-                    <div
-                      class="modal fade"
-                      id="editmodel"
-                      data-bs-backdrop="static"
-                      data-bs-keyboard="false"
-                      tabindex="-1"
-                      aria-labelledby="staticBackdropLabel"
-                      aria-hidden="true"
-                    >
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h1
-                              class="modal-title fs-5"
-                              id="staticBackdropLabel"
-                            >
-                              Edit Task
-                            </h1>
-                            <button
-                              type="button"
-                              class="btn-close"
-                              data-bs-dismiss="modal"
-                              aria-label="Close"
-                            ></button>
-                          </div>
-                          <div className="modal-body">
-                            <div class="form-floating mb-3">
-                              <input
-                                type="text"
-                                class="form-control"
-                                id="floatingInput"
-                                name="title"
-                                placeholder="Title for the task"
-                                value={editTask.title}
-                                onChange={editChange}
-                                required
-                              />
-                              <label for="floatingInput">
-                                Title <span className="text-danger">*</span>
-                              </label>
-                            </div>
-                            <div class="form-floating">
-                              <textarea
-                                class="form-control mb-3"
-                                name="description"
-                                id=""
-                                rows="10"
-                                value={editTask.description}
-                                onChange={editChange}
-                              ></textarea>
-                              <label for="floatingTextarea">Description</label>
-                            </div>
-                            <div className="d-flex align-items-center gap-2">
-                              <label htmlFor="taskDate" className="me-2">
-                                Date:
-                              </label>
-                              <input
-                                type="date"
-                                className="form-control"
-                                name="date"
-                                value={editTask.date}
-                                onChange={editChange}
-                              />
-                              <label htmlFor="taskTime" className="ms-2">
-                                Time:
-                              </label>
-                              <input
-                                type="time"
-                                className="form-control"
-                                name="time"
-                                value={editTask.time}
-                                onChange={editChange}
-                              />
-                            </div>
-                          </div>
-
-                          <div class="modal-footer">
-                            <button
-                              type="button"
-                              class="btn btn-outline-secondary"
-                              data-bs-dismiss="modal"
-                            >
-                              Cancel
-                            </button>
-                            <button
-                              type="button"
-                              class="btn btn-outline-success"
-                              onClick={saveEdit}
-                              data-bs-dismiss="modal"
-                            >
-                              Update
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      className="btn btn-outline-success"
-                      onClick={() => toggleComplete(index)}
-                      disabled={task.completed}
-                      style={{
-                        display: task.completed ? "none" : "inline-block",
-                      }}
-                    >
-                      <FontAwesomeIcon
-                        icon={faCircleCheck}
-                        style={{ color: "#07f223" }}
-                      />
-                    </button>
-                  </td>
-                  <td>
-                    {task.completed ? (
-                      <span className="text-bg-success p-1 btn-group-vertical ">
-                        Success
-                      </span>
-                    ) : (
-                      <span className="text-bg-warning p-1 btn-group-vertical">
-                        Pending
-                      </span>
-                    )}
-                  </td>
-                </tr>
-              ))
+                      <button
+                        type="button"
+                        className="btn btn-outline-success"
+                        onClick={() => toggleComplete(actualIndex)}
+                        disabled={task.completed}
+                        style={{
+                          display: task.completed ? "none" : "inline-block",
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon={faCircleCheck}
+                          style={{ color: "#07f223" }}
+                        />
+                      </button>
+                    </td>
+                    <td>
+                      {task.completed ? (
+                        <span className="text-bg-success p-1 btn-group-vertical ">
+                          Success
+                        </span>
+                      ) : (
+                        <span className="text-bg-warning p-1 btn-group-vertical">
+                          Pending
+                        </span>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </table>

@@ -29,13 +29,13 @@ const AddTodo = ({ addTask }) => {
           type="button"
           className="btn btn-primary"
           data-bs-toggle="modal"
-          data-bs-target="#staticBackdrop"
+          data-bs-target="#addNewTask"
         >
           Add New Task
         </button>
         <div
           className="modal fade"
-          id="staticBackdrop"
+          id="addNewTask"
           data-bs-backdrop="static"
           data-bs-keyboard="false"
           tabIndex="-1"
@@ -46,7 +46,7 @@ const AddTodo = ({ addTask }) => {
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
-                <h1 className="modal-title fs-5" id="staticBackdropLabel">
+                <h1 className="modal-title fs-5" id="addNewTask">
                   Assign To-do
                 </h1>
                 <button
