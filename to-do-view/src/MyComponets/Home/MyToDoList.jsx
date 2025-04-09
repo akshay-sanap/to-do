@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import AddTodo from "./AddTodo";
-import Header from "./Header";
-import Pagination from "./Pagination";
-import EditModel from "./EditModel";
-import DeleteModal from "./DeleteModal";
+import AddTodo from "../AddTodo";
+import Pagination from "../Pagination";
+import EditModel from "../EditModel";
+import DeleteModal from "../DeleteModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPenToSquare,
@@ -69,7 +68,10 @@ const MyToDoList = () => {
     const response = await fetch("https://jsonplaceholder.typicode.com/todos");
     const data = await response.json();
 
-    const formattedTasks = data.map((item) => ({
+    const userId = parseInt(localStorage.getItem("userId"), 10);
+    const userTasks = data.filter((item) => item.userId === userId);
+
+    const formattedTasks = userTasks.map((item) => ({
       title: item.title,
       description: "no description",
       date: "no date",
@@ -86,12 +88,12 @@ const MyToDoList = () => {
   return (
     <>
       <div className="d-flex justify-content-between">
-        <Header />
+        <h1>My To-do List</h1>
         <AddTodo addTask={addToDo} />
       </div>
       <div className="table-responsive">
-        <table class="table table-striped ">
-          <thead>
+        <table class="table table-bordered table-hover align-middle ">
+          <thead className="table-warning">
             <tr>
               <th scope="col">Sr.No</th>
               <th scope="col">Title</th>
