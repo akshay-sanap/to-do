@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import AddTodo from "../AddTodo";
+import AddTodo from "../modals/AddTodo";
 import Pagination from "../Pagination";
-import EditModel from "../EditModel";
-import DeleteModal from "../DeleteModal";
+import EditModel from "../modals/EditModel";
+import DeleteModal from "../modals/DeleteModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPenToSquare,
