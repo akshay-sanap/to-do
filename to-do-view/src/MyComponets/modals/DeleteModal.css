@@ -1,0 +1,30 @@
+/* Target modal-dialog only
+.modal .modal-dialog.responsive-modal {
+    width: 100% !important;
+    max-width: 90vw !important;
+    margin: 1rem auto !important;
+}
+
+.modal .modal-dialog.responsive-modal {
+    background: rgba(255, 0, 0, 0.05);
+    /* light red 
+    border: 1px dashed red;
+}
+
+@media (min-width: 576px) {
+    .responsive-modal {
+        max-width: 400px;
+    }
+}
+
+@media (min-width: 768px) {
+    .responsive-modal {
+        max-width: 400px;
+    }
+}
+
+@media (min-width: 992px) {
+    .responsive-modal {
+        max-width: 500px;
+    }
+}  */

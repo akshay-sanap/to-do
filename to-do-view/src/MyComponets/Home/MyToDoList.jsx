@@ -65,19 +65,21 @@ const MyToDoList = () => {
 
   // fetching data from API
   const fetchData = async () => {
-    const response = await fetch("https://jsonplaceholder.typicode.com/todos");
+    const userId = parseInt(localStorage.getItem("userId"), 10);
+
+    const response = await fetch(
+      `https://jsonplaceholder.typicode.com/todos?userId=${userId}`
+    );
     const data = await response.json();
 
-    const userId = parseInt(localStorage.getItem("userId"), 10);
-    const userTasks = data.filter((item) => item.userId === userId);
-
-    const formattedTasks = userTasks.map((item) => ({
+    const formattedTasks = data.map((item) => ({
       title: item.title,
       description: "no description",
       date: "no date",
       time: "no time",
       completed: item.completed,
     }));
+
     setTask(formattedTasks);
   };
 
@@ -87,19 +89,26 @@ const MyToDoList = () => {
 
   return (
     <>
-      <div className="d-flex justify-content-between">
-        <h1>My To-do List</h1>
+      <div className="d-flex justify-content-between flex-wrap">
+        <h1 className="mb-3">My To-do List</h1>
         <AddTodo addTask={addToDo} />
       </div>
+
       <div className="table-responsive">
-        <table class="table table-bordered table-hover align-middle ">
+        <table className="table table-bordered table-hover align-middle text-start">
           <thead className="table-warning">
             <tr>
-              <th scope="col">Sr.No</th>
+              <th scope="col">#</th>
               <th scope="col">Title</th>
-              <th scope="col">Description</th>
-              <th scope="col">Date</th>
-              <th scope="col">Time</th>
+              <th className="d-none d-md-table-cell" scope="col">
+                Description
+              </th>
+              <th className="d-none d-lg-table-cell" scope="col">
+                Date
+              </th>
+              <th className="d-none d-lg-table-cell" scope="col">
+                Time
+              </th>
               <th scope="col">Actions</th>
               <th scope="col">Status</th>
             </tr>
@@ -107,11 +116,11 @@ const MyToDoList = () => {
           <tbody>
             {currentTasks.length === 0 ? (
               <tr>
-                <td colSpan={7} className="text-center ">
+                <td colSpan={7} className="text-center">
                   No tasks available!!!
                   <button
                     type="button"
-                    className="btn btn-primary m-5"
+                    className="btn btn-primary m-3"
                     data-bs-toggle="modal"
                     data-bs-target="#staticBackdrop"
                   >
@@ -122,77 +131,143 @@ const MyToDoList = () => {
             ) : (
               currentTasks.map((task, index) => {
                 const actualIndex = indexOfFirstItem + index;
-
                 return (
                   <tr key={actualIndex}>
-                    <th scope="row">{indexOfFirstItem + index + 1}</th>
-                    <td>{task.title}</td>
-                    <td>{task.description}</td>
-                    <td>{task.date}</td>
-                    <td>{task.time}</td>
-                    <td className="d-flex">
-                      <button
-                        type="button"
-                        class="btn btn-outline-warning me-2"
-                        data-bs-toggle="modal"
-                        data-bs-target={`#deleteModal-${actualIndex}`}
-                      >
-                        <FontAwesomeIcon
-                          icon={faTrashCan}
-                          style={{ color: "#fa0000" }}
+                    <th scope="row">{actualIndex + 1}</th>
+                    <td className="text-break">{task.title}</td>
+                    <td className="d-none d-md-table-cell text-break">
+                      {task.description}
+                    </td>
+                    <td className="d-none d-lg-table-cell">{task.date}</td>
+                    <td className="d-none d-lg-table-cell">{task.time}</td>
+                    <td>
+                      <div className="d-none d-md-flex flex-wrap gap-2">
+                        <button
+                          type="button"
+                          className="btn btn-outline-warning"
+                          data-bs-toggle="modal"
+                          data-bs-target={`#deleteModal-${actualIndex}`}
+                        >
+                          <FontAwesomeIcon
+                            icon={faTrashCan}
+                            style={{ color: "#fa0000" }}
+                          />
+                        </button>
+                        <DeleteModal
+                          key={`delete-${index}`}
+                          index={actualIndex}
+                          deleteTask={deleteTask}
                         />
-                      </button>
-                      <DeleteModal
-                        key={`delete-${index}`}
-                        index={actualIndex}
-                        deleteTask={deleteTask}
-                      />
 
-                      <button
-                        type="button"
-                        class="btn btn-outline-warning me-2"
-                        data-bs-toggle="modal"
-                        data-bs-target={`#EditModel-${actualIndex}`}
-                        onClick={() => editClick(actualIndex)}
-                        style={{
-                          display: task.completed ? "none" : "inline-block",
-                        }}
-                      >
-                        <FontAwesomeIcon
-                          icon={faPenToSquare}
-                          style={{ color: "#00ddfa" }}
-                        />
-                      </button>
-                      <EditModel
-                        key={`edit-${index}`}
-                        index={actualIndex}
-                        editTask={editTask}
-                        editChange={editChange}
-                        saveEdit={saveEdit}
-                      />
+                        {!task.completed && (
+                          <>
+                            <button
+                              type="button"
+                              className="btn btn-outline-info"
+                              data-bs-toggle="modal"
+                              data-bs-target={`#EditModel-${actualIndex}`}
+                              onClick={() => editClick(actualIndex)}
+                            >
+                              <FontAwesomeIcon
+                                icon={faPenToSquare}
+                                style={{ color: "#00ddfa" }}
+                              />
+                            </button>
+                            <EditModel
+                              key={`edit-${index}`}
+                              index={actualIndex}
+                              editTask={editTask}
+                              editChange={editChange}
+                              saveEdit={saveEdit}
+                            />
 
-                      <button
-                        type="button"
-                        className="btn btn-outline-success"
-                        onClick={() => toggleComplete(actualIndex)}
-                        disabled={task.completed}
-                        style={{
-                          display: task.completed ? "none" : "inline-block",
-                        }}
-                      >
-                        <FontAwesomeIcon
-                          icon={faCircleCheck}
-                          style={{ color: "#07f223" }}
-                        />
-                      </button>
+                            <button
+                              type="button"
+                              className="btn btn-outline-success"
+                              onClick={() => toggleComplete(actualIndex)}
+                            >
+                              <FontAwesomeIcon
+                                icon={faCircleCheck}
+                                style={{ color: "#07f223" }}
+                              />
+                            </button>
+                          </>
+                        )}
+                      </div>
+
+                      <div className="dropdown d-flex d-md-none">
+                        <button
+                          className="btn btn-secondary dropdown-toggle"
+                          type="button"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                        >
+                          Actions
+                        </button>
+                        <ul className="dropdown-menu">
+                          <li>
+                            <button
+                              type="button"
+                              className="btn btn-outline-warning"
+                              data-bs-toggle="modal"
+                              data-bs-target={`#deleteModal-${actualIndex}`}
+                            >
+                              <FontAwesomeIcon
+                                icon={faTrashCan}
+                                style={{ color: "#fa0000" }}
+                              />
+                            </button>
+                            <DeleteModal
+                              key={`delete-${index}`}
+                              index={actualIndex}
+                              deleteTask={deleteTask}
+                            />
+                          </li>
+                          {!task.completed && (
+                            <>
+                              <li>
+                                <button
+                                  type="button"
+                                  className="btn btn-outline-info"
+                                  data-bs-toggle="modal"
+                                  data-bs-target={`#EditModel-${actualIndex}`}
+                                  onClick={() => editClick(actualIndex)}
+                                >
+                                  <FontAwesomeIcon
+                                    icon={faPenToSquare}
+                                    style={{ color: "#00ddfa" }}
+                                  />
+                                </button>
+                                <EditModel
+                                  key={`edit-${index}`}
+                                  index={actualIndex}
+                                  editTask={editTask}
+                                  editChange={editChange}
+                                  saveEdit={saveEdit}
+                                />
+                              </li>
+                              <li>
+                                <button
+                                  type="button"
+                                  className="btn btn-outline-success"
+                                  onClick={() => toggleComplete(actualIndex)}
+                                >
+                                  <FontAwesomeIcon
+                                    icon={faCircleCheck}
+                                    style={{ color: "#07f223" }}
+                                  />
+                                </button>
+                              </li>
+                            </>
+                          )}
+                        </ul>
+                      </div>
                     </td>
                     <td>
                       {task.completed ? (
-                        <span className="text-bg-success p-1 btn-group-vertical ">
-                          Success
-                        </span>
+                        <span className="badge bg-success">Done</span>
                       ) : (
-                        <span className="text-bg-warning p-1 btn-group-vertical">
+                        <span className="badge bg-warning text-dark">
                           Pending
                         </span>
                       )}
@@ -203,6 +278,7 @@ const MyToDoList = () => {
             )}
           </tbody>
         </table>
+
         <Pagination
           totalPages={totalPages}
           currentPage={currentPage}

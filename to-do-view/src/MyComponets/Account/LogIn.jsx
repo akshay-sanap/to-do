@@ -1,43 +1,37 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 
 const LogIn = () => {
   const navigate = useNavigate();
   const [emailOrUsername, setEmailOrUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [users, setUsers] = useState([]);
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const res = await fetch("https://jsonplaceholder.typicode.com/users");
-        const data = await res.json();
-        setUsers(data);
-      } catch (err) {
-        console.error("Error fetching users:", err);
-      }
-    };
+  const isEmail = (input) => /\S+@\S+\.\S+/.test(input);
 
-    fetchUsers();
-  }, []);
+  const generateToken = (user) => {
+    return uuidv4();
+  };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    const foundUser = users.find(
-      (user) =>
-        user.username.toLowerCase() === emailOrUsername.toLowerCase() ||
-        user.email.toLowerCase() === emailOrUsername.toLowerCase()
-    );
+    const userEntry = isEmail(emailOrUsername) ? "email" : "username";
+    const url = `https://jsonplaceholder.typicode.com/users?${userEntry}=${emailOrUsername}`;
+
+    const res = await fetch(url);
+    const users = await res.json();
+    const foundUser = users[0];
 
     if (foundUser) {
-      // Simulate password check — JSONPlaceholder doesn't have passwords
       if (password === "pass@123") {
+        const token = generateToken(foundUser);
+        localStorage.setItem("token", token);
         localStorage.setItem("userId", foundUser.id);
         localStorage.setItem("userName", foundUser.name);
         navigate("/home");
       } else {
-        alert("Incorrect password. Use 'password' for demo.");
+        alert("Incorrect password. Use 'pass@123' for demo.");
       }
     } else {
       alert("User not found. Try a valid username or email.");
