@@ -9,7 +9,7 @@ const LogIn = () => {
 
   const isEmail = (input) => /\S+@\S+\.\S+/.test(input);
 
-  const generateToken = (user) => {
+  const generateToken = () => {
     return uuidv4();
   };
 
@@ -18,7 +18,6 @@ const LogIn = () => {
 
     const userEntry = isEmail(emailOrUsername) ? "email" : "username";
     const url = `https://jsonplaceholder.typicode.com/users?${userEntry}=${emailOrUsername}`;
-
     const res = await fetch(url);
     const users = await res.json();
     const foundUser = users[0];

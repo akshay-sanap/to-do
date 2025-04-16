@@ -1,21 +1,16 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faListCheck, faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import { faListCheck } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
+import ButtonGroup from "./ButtonGroup";
+import MyProfile from "./MyProfile";
 
 const Navbar = () => {
   const navigate = useNavigate();
-
   const isLoggedIn = !!localStorage.getItem("userId");
-  const userName = localStorage.getItem("userName");
-
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate("/");
-  };
 
   return (
-    <nav className="d-flex justify-content-lg-around navbar mb-5 text-bg-dark py-3 px-4">
+    <nav className="d-flex justify-content-around navbar mb-5 text-bg-dark py-3 px-5">
       <button
         className="btn btn-outline-warning fw-bold d-flex align-items-center gap-2 border-0"
         onClick={() => navigate(isLoggedIn ? "/home" : "/")}
@@ -23,36 +18,12 @@ const Navbar = () => {
         <FontAwesomeIcon icon={faListCheck} size="lg" />
         <span>To-Do</span>
       </button>
-
+      {isLoggedIn ? <ButtonGroup /> : ""}
       <form className="d-flex align-items-center gap-3" role="search">
-        <input
-          className="form-control me-2"
-          type="search"
-          placeholder="Search"
-        />
-
-        <button className="btn btn-outline-info me-3 pe-3" type="submit">
-          Search
-        </button>
-
         {isLoggedIn ? (
           <>
             <div className="d-flex align-items-center gap-2 text-nowrap">
-              <FontAwesomeIcon
-                icon={faUserCircle}
-                size="2x"
-                className="text-info"
-                style={{ cursor: "pointer" }}
-                onClick={() => navigate("#")}
-              />
-              <span className="text-light fw-bold">{userName}</span>
-              <button
-                type="button"
-                className="btn btn-outline-danger"
-                onClick={handleLogout}
-              >
-                Logout
-              </button>
+              <MyProfile />
             </div>
           </>
         ) : (

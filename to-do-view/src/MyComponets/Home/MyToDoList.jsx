@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AddTodo from "../modals/AddTodo";
-import Pagination from "../Pagination";
+import Pagination from "../HeaderFooter/Pagination";
 import EditModel from "../modals/EditModel";
 import DeleteModal from "../modals/DeleteModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

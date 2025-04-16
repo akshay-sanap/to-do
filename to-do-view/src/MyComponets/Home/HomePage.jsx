@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Sidebar from "../Sidebar/Sidebar"; // Ensure Sidebar is correctly imported
 
 const HomePage = () => {
   const navigate = useNavigate();
   const userName = localStorage.getItem("userName");
   const [selectedOption, setSelectedOption] = useState(null); // Initially, no option is selected
-  const [showSidebar, setShowSidebar] = useState(false); // Sidebar is hidden initially
 
   const imageStyle = {
     height: "180px",
@@ -45,21 +43,20 @@ const HomePage = () => {
   ];
 
   const handleCardClick = (route) => {
-    setSelectedOption(route); // Set the selected option
-    setShowSidebar(true); // Show the sidebar
+    setSelectedOption(route);
     navigate(route); // Navigate to the selected route
   };
 
   const renderContent = () => {
     switch (selectedOption) {
       case "todos":
-        return <MyToDoList />; // Replace with the actual component for MyToDoList
+        return <MyToDoList />;
       case "posts":
-        return <MyPosts />; // Replace with the actual component for MyPosts
+        return <MyPosts />;
       case "albums":
-        return <MyAlbum />; // Replace with the actual component for MyAlbum
+        return <MyAlbum />;
       case "users":
-        return <UserList />; // Replace with the actual component for UserList
+        return <UserList />;
       default:
         return <h3>Please select an option from the homepage</h3>;
     }
@@ -67,19 +64,15 @@ const HomePage = () => {
 
   return (
     <div className="d-flex">
-      {/* Sidebar: Show only if showSidebar is true */}
-      {showSidebar && <Sidebar onSelect={setSelectedOption} />}
-
-      <div className={`flex-grow-1 p-4 ${showSidebar ? "ml-250" : ""}`}>
+      <div className="flex-grow-1 p-4">
         <h2 className="text-center mb-4">
           Welcome on Board, <span className="text-primary">{userName}</span>!
         </h2>
         {selectedOption ? (
-          renderContent() // Render selected content
+          renderContent()
         ) : (
           <div className="container mt-5">
             <div className="row">
-              {/* Card layout */}
               {cards.map((card, index) => (
                 <div key={index} className="col-12 col-sm-6 col-lg-3 d-flex">
                   <div
@@ -88,7 +81,7 @@ const HomePage = () => {
                       transition: "transform 0.2s ease",
                       cursor: "pointer",
                     }}
-                    onClick={() => handleCardClick(card.route)} // When a card is clicked, show sidebar and set route
+                    onClick={() => handleCardClick(card.route)}
                     onMouseEnter={(e) =>
                       (e.currentTarget.style.transform = "scale(1.05)")
                     }
@@ -106,12 +99,7 @@ const HomePage = () => {
                       <h5 className="card-title">{card.title}</h5>
                       <p className="card-text">{card.text}</p>
                       <div className="mt-auto d-flex justify-content-center">
-                        <button
-                          className="btn btn-primary"
-                          onClick={() => handleCardClick(card.route)} // Navigate to selected route
-                        >
-                          {card.btn}
-                        </button>
+                        <button className="btn btn-primary">{card.btn}</button>
                       </div>
                     </div>
                   </div>
