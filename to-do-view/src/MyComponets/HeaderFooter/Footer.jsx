@@ -1,9 +1,9 @@
 import React from "react";
-
+import "./Footer.css";
 const Footer = () => {
   return (
-    <footer className="bg-dark text-white mt-5 py-3">
-      <div className="container text-center">
+    <footer className="footer">
+      <div className="container">
         <p className="mb-1">📝 My To-Do App</p>
         <small>
           Built with 💻 React & Bootstrap | &copy; {new Date().getFullYear()}{" "}

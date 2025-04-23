@@ -31,6 +31,15 @@ const ButtonGroup = () => {
       >
         My Albums
       </button>
+
+      <button
+        type="button"
+        className="btn btn-outline-info"
+        onClick={() => navigate("/myfeed")}
+      >
+        My Feed
+      </button>
+      
       <button
         type="button"
         className="btn btn-outline-info"
